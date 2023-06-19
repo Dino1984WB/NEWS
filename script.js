@@ -60,7 +60,7 @@ var badKeywords = [
   }
   
   // Fetch data from server-side Node.js application
-  fetch('http://your-node-server-url') // Replace with your Node.js server URL
+  fetch('http://localhost:3000') // Replace with your Node.js server URL
     .then(response => response.text())
     .then(articleContent => {
       analyzeArticleContent(articleContent);

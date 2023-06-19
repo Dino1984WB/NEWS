@@ -1,7 +1,11 @@
+const express = require('express');
 const axios = require('axios');
 const cheerio = require('cheerio');
 
-async function scrapeWebpage() {
+const app = express();
+const port = 3000;
+
+app.get('/', async (req, res) => {
   try {
     const response = await axios.get('https://news.google.com/search?q=USA%2C%20US%20%22China%22&hl=en-US&gl=US&ceid=US%3Aen');
     const htmlContent = response.data;
@@ -15,13 +19,17 @@ async function scrapeWebpage() {
       headlines.push(headline);
     });
 
-    // Process the extracted data
-    headlines.forEach(headline => {
-      console.log(headline);
-    });
+    // Combine headlines into a single string
+    const articleContent = headlines.join(' ');
+
+    // Send the article content as the response
+    res.send(articleContent);
   } catch (error) {
     console.log('Error scraping web page:', error);
+    res.status(500).send('Error scraping web page');
   }
-}
+});
 
-scrapeWebpage();
+app.listen(port, () => {
+  console.log(`Server is running on http://localhost:${port}`);
+});
