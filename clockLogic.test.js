@@ -1,37 +1,43 @@
 //William Bukowski was here
-const { analyzeArticleContent } = require('./clockLogic');
+const axios = require('axios');
 
-describe('Clock Logic', () => {
-  it('should rotate needle to 0 degrees when all words are bad keywords', () => {
-    const articleContent = 'This is a bad article containing negative words.';
-    const startTime = new Date();
-    analyzeArticleContent(articleContent);
-    const endTime = new Date();
-    const needleElement = document.getElementById('needle');
-    console.log(`${startTime.toISOString()} - ${endTime.toISOString()}: Article Content: ${articleContent}`);
-    console.log(`${endTime.toISOString()}: Rotation: ${needleElement.style.transform}`);
-    expect(needleElement.style.transform).toBe('rotate(0deg)');
+function analyzeArticleContent(articleContent) {
+  let goodCount = 0;
+  let badCount = 0;
+
+  const articleWords = articleContent.toLowerCase().split(' ');
+
+  articleWords.forEach(word => {
+    if (goodKeywords.includes(word)) {
+      goodCount++;
+    } else if (badKeywords.includes(word)) {
+      badCount++;
+    }
   });
 
-  it('should rotate needle to 180 degrees when all words are good keywords', () => {
-    const articleContent = 'This is a great article containing positive words.';
-    const startTime = new Date();
-    analyzeArticleContent(articleContent);
-    const endTime = new Date();
-    const needleElement = document.getElementById('needle');
-    console.log(`${startTime.toISOString()} - ${endTime.toISOString()}: Article Content: ${articleContent}`);
-    console.log(`${endTime.toISOString()}: Rotation: ${needleElement.style.transform}`);
-    expect(needleElement.style.transform).toBe('rotate(180deg)');
-  });
+  const ratio = (goodCount - badCount) / (goodCount + badCount);
+  const degrees = 90 - (ratio * 180);
 
-  it('should calculate the rotation correctly for a mixture of good and bad keywords', () => {
-    const articleContent = 'This is a mixed article with both good and bad words.';
-    const startTime = new Date();
+  console.log('Good Count:', goodCount);
+  console.log('Bad Count:', badCount);
+  console.log('Ratio:', ratio);
+  console.log('Degrees:', degrees);
+
+  // Call the function to update the rotation of the needle element
+  updateNeedleRotation(degrees);
+}
+
+function updateNeedleRotation(degrees) {
+  const needleElement = document.getElementById('needle');
+  needleElement.style.transform = `rotate(${degrees}deg)`;
+}
+
+// Fetch data from the server-side Node.js application
+axios.get('http://localhost:3000') // Replace with your Node.js server URL
+  .then(response => {
+    const articleContent = response.data;
     analyzeArticleContent(articleContent);
-    const endTime = new Date();
-    const needleElement = document.getElementById('needle');
-    console.log(`${startTime.toISOString()} - ${endTime.toISOString()}: Article Content: ${articleContent}`);
-    console.log(`${endTime.toISOString()}: Rotation: ${needleElement.style.transform}`);
-    expect(needleElement.style.transform).toBe('rotate(90deg)');
+  })
+  .catch(error => {
+    console.log('Error fetching article content:', error);
   });
-});

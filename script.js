@@ -1,3 +1,6 @@
+//William Bukowski was here
+const axios = require('axios');
+
 var goodKeywords = [
     'positive', 'cooperation', 'peaceful', 'diplomacy', 'partnership',
     'mutual', 'harmony', 'friendly', 'progress', 'collaboration',
@@ -60,9 +63,9 @@ var badKeywords = [
   }
   
   // Fetch data from server-side Node.js application
-  fetch('http://localhost:3000') // Replace with your Node.js server URL
-    .then(response => response.text())
-    .then(articleContent => {
+  axios.get('http://your-node-server-url') // Replace with your Node.js server URL
+    .then(response => {
+      const articleContent = response.data;
       analyzeArticleContent(articleContent);
     })
     .catch(error => {

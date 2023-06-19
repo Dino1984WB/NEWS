@@ -4,7 +4,7 @@
   "description": "",
   "main": "script.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
+    "test": "jest",
     "start": "node server.js"
   },
   "repository": {
@@ -17,5 +17,15 @@
   "bugs": {
     "url": "https://github.com/Dino1984WB/NEWS/issues"
   },
-  "homepage": "https://github.com/Dino1984WB/NEWS#readme"
+  "homepage": "https://github.com/Dino1984WB/NEWS#readme",
+  "devDependencies": {
+    "@babel/preset-env": "^7.22.5",
+    "babel-jest": "^29.5.0",
+    "jest": "^27.2.4"
+  },
+  "jest": {
+    "transform": {
+      "^.+\\.js$": "babel-jest"
+    }
+  }
 }
