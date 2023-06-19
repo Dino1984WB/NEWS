@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+    }
+    #article-container {
+      width: 600px;
+      height: 400px;
+      overflow-y: scroll;
+      border: 1px solid #ccc;
+      padding: 10px;
+    }
+    .article {
+      margin-bottom: 10px;
+      padding: 10px;
+      border: 1px solid #ccc;
+      background-color: #f9f9f9;
+    }
+    .article-title {
+      font-weight: bold;
+      margin-bottom: 5px;
+    }
+    .article-description {
+      color: #666;
+    }
+  </style>
+</head>
+<body>
+  <h1>News Articles</h1>
+  
+  <div id="article-container"></div>
+
+  <script>
+    var articleContainer = document.getElementById('article-container');
+    var searchQuery = 'China US Taiwan'; // Replace with your search query
+
+    function loadArticles() {
+      // Replace with your API endpoint and implementation for retrieving news articles based on the search query
+      var url = 'https://your-api-endpoint.com/articles?q=' + searchQuery;
+
+      fetch(url)
+        .then(function(response) {
+          return response.json();
+        })
+        .then(function(data) {
+          displayArticles(data.articles);
+        })
+        .catch(function(error) {
+          console.log('Error fetching articles:', error);
+        });
+    }
+
+    function displayArticles(articles) {
+      var fragment = document.createDocumentFragment();
+
+      articles.forEach(function(article) {
+        var articleDiv = document.createElement('div');
+        articleDiv.className = 'article';
+
+        var titleElement = document.createElement('h2');
+        titleElement.className = 'article-title';
+        titleElement.textContent = article.title;
+        articleDiv.appendChild(titleElement);
+
+        var descriptionElement = document.createElement('p');
+        descriptionElement.className = 'article-description';
+        descriptionElement.textContent = article.description;
+        articleDiv.appendChild(descriptionElement);
+
+        fragment.appendChild(articleDiv);
+      });
+
+      articleContainer.appendChild(fragment);
+    }
+
+    // Load initial set of articles
+    loadArticles();
+
+    // Load more articles when user scrolls to the bottom
+    articleContainer.addEventListener('scroll', function() {
+      if (articleContainer.scrollTop + articleContainer.clientHeight >= articleContainer.scrollHeight) {
+        loadArticles();
+      }
+    });
+  </script>
+</body>
+</html>
