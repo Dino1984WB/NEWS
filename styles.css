@@ -1,20 +1,106 @@
-#graph-container {
+/*WIlliam Bukowski was here*/
+body {
+    background-color: #f2f2f2;
+    font-family: 'Montserrat', sans-serif;
+  }
+  
+  h1 {
+    text-align: center;
+    color: #004466;
+    font-size: 24px;
+  }
+  
+  #graph-container {
     width: 400px;
     height: 400px;
     margin: 0 auto;
     border: 1px solid #ccc;
     position: relative;
+    background-color: #222;
+    border-radius: 50%;
+    overflow: hidden;
   }
   
   #needle {
-    width: 2px;
-    height: 200px;
-    background-color: red;
+    width: 4px;
+    height: 170px;
+    background-color: #00aaff;
     position: absolute;
-    left: 50%;
+    left: calc(50% - 2px);
     bottom: 50%;
     transform-origin: bottom center;
     transform: rotate(0deg);
     transition: transform 0.5s ease-in-out;
+    border-radius: 8px 8px 0 0;
+  }
+  
+  .markers {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+  }
+  
+  .markers .marker {
+    position: absolute;
+    top: 0;
+    left: 50%;
+    width: 2px;
+    height: 10px;
+    background-color: #00aaff;
+    transform-origin: center bottom;
+    transform: translateX(-50%);
+  }
+  
+  .markers .marker:nth-child(5n) {
+    height: 20px;
+  }
+  
+  .markers .marker:nth-child(15n) {
+    height: 30px;
+  }
+  
+  .markers .marker:before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 50%;
+    width: 6px;
+    height: 6px;
+    background-color: #00aaff;
+    border-radius: 50%;
+    transform: translate(-50%, -50%);
+  }
+  
+  .markers .marker:nth-child(5n):before {
+    width: 10px;
+    height: 10px;
+  }
+  
+  .markers .marker:nth-child(15n):before {
+    width: 14px;
+    height: 14px;
+  }
+  
+  .clock-text {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-family: 'Times New Roman', serif;
+    font-size: 16px;
+    color: #004466;
+  }
+  
+  .clock-text span {
+    display: block;
+  }
+  
+  .clock-text .time {
+    font-weight: bold;
+    font-size: 36px;
+  }
+  
+  .clock-text .label {
+    font-size: 14px;
   }
   

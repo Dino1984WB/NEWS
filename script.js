@@ -38,40 +38,34 @@ var badKeywords = [
     'wrestle', 'wound', 'wrangle', 'wreak', 'wrong'
   ];
   
-  function fetchAndAnalyzeArticles() {
-    // Use your preferred method to scrape Google News articles related to Chinese-US relations
+  function analyzeArticleContent(articleContent) {
+    let goodCount = 0;
+    let badCount = 0;
   
-    // Mock data for demonstration purposes
-    var articles = [
-      'This is a positive article about cooperation between China and the US.',
-      'Tensions rise as China and the US engage in a trade dispute.',
-      'Efforts for peace and stability between China and the US continue.',
-    ];
+    const articleWords = articleContent.toLowerCase().split(' ');
   
-    var goodCount = 0;
-    var badCount = 0;
-  
-    articles.forEach(article => {
-      var lowercaseArticle = article.toLowerCase();
-      goodKeywords.forEach(goodWord => {
-        if (lowercaseArticle.includes(goodWord)) {
-          goodCount++;
-        }
-      });
-      badKeywords.forEach(badWord => {
-        if (lowercaseArticle.includes(badWord)) {
-          badCount++;
-        }
-      });
+    articleWords.forEach(word => {
+      if (goodKeywords.includes(word)) {
+        goodCount++;
+      } else if (badKeywords.includes(word)) {
+        badCount++;
+      }
     });
   
-    var ratio = goodCount / badCount;
-    var degrees = (180 * ratio) - 90; // Adjust the scaling of the ratio to match the desired angle
+    const ratio = (goodCount - badCount) / (goodCount + badCount);
+    const degrees = 90 - (ratio * 180);
   
-    var needleElement = document.getElementById('needle');
+    const needleElement = document.getElementById('needle');
     needleElement.style.transform = `rotate(${degrees}deg)`;
   }
   
-  // Fetch and analyze articles every 3 seconds (adjust the interval as needed)
-  setInterval(fetchAndAnalyzeArticles, 3000); // Fetch and analyze every 3 seconds
+  // Fetch data from server-side Node.js application
+  fetch('http://your-node-server-url') // Replace with your Node.js server URL
+    .then(response => response.text())
+    .then(articleContent => {
+      analyzeArticleContent(articleContent);
+    })
+    .catch(error => {
+      console.log('Error fetching article content:', error);
+    });
   
