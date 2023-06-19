@@ -2,88 +2,113 @@
 <html>
 <head>
   <style>
-    body {
-      font-family: Arial, sans-serif;
-    }
-    #article-container {
-      width: 600px;
+    #graph-container {
+      width: 400px;
       height: 400px;
-      overflow-y: scroll;
+      margin: 0 auto;
       border: 1px solid #ccc;
-      padding: 10px;
+      position: relative;
     }
-    .article {
-      margin-bottom: 10px;
-      padding: 10px;
-      border: 1px solid #ccc;
-      background-color: #f9f9f9;
-    }
-    .article-title {
-      font-weight: bold;
-      margin-bottom: 5px;
-    }
-    .article-description {
-      color: #666;
+
+    #needle {
+      width: 2px;
+      height: 200px;
+      background-color: red;
+      position: absolute;
+      left: 50%;
+      bottom: 50%;
+      transform-origin: bottom center;
+      transform: rotate(0deg);
+      transition: transform 0.5s ease-in-out;
     }
   </style>
 </head>
 <body>
-  <h1>News Articles</h1>
+  <h1>Chinese-US Relations Monitor</h1>
   
-  <div id="article-container"></div>
+  <div id="graph-container">
+    <div id="needle"></div>
+  </div>
 
   <script>
-    var articleContainer = document.getElementById('article-container');
-    var searchQuery = 'China US Taiwan'; // Replace with your search query
+    // Example dictionaries of good and bad keywords
+    var goodKeywords = [
+    'positive', 'cooperation', 'peaceful', 'diplomacy', 'partnership',
+    'mutual', 'harmony', 'friendly', 'progress', 'collaboration',
+    'constructive', 'stable', 'amicable', 'alliance', 'advancement',
+    'prosperity', 'trust', 'supportive', 'bridge', 'unity',
+    'integration', 'successful', 'conciliation', 'beneficial', 'consensus',
+    'balanced', 'coexist', 'synergy', 'partners', 'mutually',
+    'interconnected', 'promising', 'triumph', 'alleviate', 'assist',
+    'comfortable', 'common', 'coordinated', 'delightful', 'enduring',
+    'felicity', 'flourishing', 'friendly', 'generous', 'glad',
+    'happy', 'hilarious', 'ideal', 'jovial', 'merry',
+    'nice', 'optimistic', 'pleasant', 'pleasurable', 'rewarding',
+    'satisfying', 'serene', 'sunny', 'thriving', 'upbeat',
+    'vibrant', 'wholesome', 'advantageous', 'benevolent', 'commendable',
+    'constructive', 'effective', 'fruitful', 'gratifying', 'helpful',
+    'inspiring', 'rewarding', 'soothing', 'supportive', 'valuable',
+    'wonderful', 'affirmative', 'assuring', 'bright', 'commendable',
+    'encouraging', 'excellent', 'hopeful', 'nurturing', 'positive',
+    'productive', 'reassuring', 'successful', 'uplifting', 'wise'
+    ];
 
-    function loadArticles() {
-      // Replace with your API endpoint and implementation for retrieving news articles based on the search query
-      var url = 'https://your-api-endpoint.com/articles?q=' + searchQuery;
+    var badKeywords = [
+    'conflict', 'tensions', 'dispute', 'escalation', 'hostility',
+    'confrontation', 'standoff', 'clash', 'friction', 'crisis',
+    'aggression', 'rivalry', 'discord', 'animosity', 'division',
+    'strife', 'contention', 'instability', 'opposition', 'provocation',
+    'violence', 'insecurity', 'distrust', 'imbalance', 'threat',
+    'challenge', 'resistance', 'frustration', 'clamor', 'disagreement',
+    'discordance', 'enmity', 'harmful', 'hostile', 'obstruction',
+    'quarrel', 'turmoil', 'unrest', 'vulnerability', 'antagonism',
+    'anxiety', 'bitterness', 'clamor', 'collision', 'contradiction',
+    'damage', 'discord', 'disharmony', 'disorder', 'disruption',
+    'dissension', 'division', 'fight', 'imbalance', 'incompatibility',
+    'inconsistency', 'insecurity', 'intrigue', 'jealousy', 'obstacle',
+    'offense', 'pain', 'rage', 'rupture', 'sour',
+    'strain', 'stress', 'struggle', 'suffering', 'tumult',
+    'turmoil', 'unpleasant', 'upheaval', 'violation', 'war',
+    'wrestle', 'wound', 'wrangle', 'wreak', 'wrong'
+    ];
 
-      fetch(url)
-        .then(function(response) {
-          return response.json();
-        })
-        .then(function(data) {
-          displayArticles(data.articles);
-        })
-        .catch(function(error) {
-          console.log('Error fetching articles:', error);
+
+    function fetchAndAnalyzeArticles() {
+      // Use your preferred method to scrape Google News articles related to Chinese-US relations
+
+      // Mock data for demonstration purposes
+      var articles = [
+        'This is a positive article about cooperation between China and the US.',
+        'Tensions rise as China and the US engage in a trade dispute.',
+        'Efforts for peace and stability between China and the US continue.',
+      ];
+
+      var goodCount = 0;
+      var badCount = 0;
+
+      articles.forEach(article => {
+        var lowercaseArticle = article.toLowerCase();
+        goodKeywords.forEach(goodWord => {
+          if (lowercaseArticle.includes(goodWord)) {
+            goodCount++;
+          }
         });
-    }
-
-    function displayArticles(articles) {
-      var fragment = document.createDocumentFragment();
-
-      articles.forEach(function(article) {
-        var articleDiv = document.createElement('div');
-        articleDiv.className = 'article';
-
-        var titleElement = document.createElement('h2');
-        titleElement.className = 'article-title';
-        titleElement.textContent = article.title;
-        articleDiv.appendChild(titleElement);
-
-        var descriptionElement = document.createElement('p');
-        descriptionElement.className = 'article-description';
-        descriptionElement.textContent = article.description;
-        articleDiv.appendChild(descriptionElement);
-
-        fragment.appendChild(articleDiv);
+        badKeywords.forEach(badWord => {
+          if (lowercaseArticle.includes(badWord)) {
+            badCount++;
+          }
+        });
       });
 
-      articleContainer.appendChild(fragment);
+      var ratio = goodCount / badCount;
+      var degrees = (180 * ratio) - 90; // Adjust the scaling of the ratio to match the desired angle
+
+      var needleElement = document.getElementById('needle');
+      needleElement.style.transform = `rotate(${degrees}deg)`;
     }
 
-    // Load initial set of articles
-    loadArticles();
-
-    // Load more articles when user scrolls to the bottom
-    articleContainer.addEventListener('scroll', function() {
-      if (articleContainer.scrollTop + articleContainer.clientHeight >= articleContainer.scrollHeight) {
-        loadArticles();
-      }
-    });
+    // Fetch and analyze articles periodically (adjust the interval as needed)
+    setInterval(fetchAndAnalyzeArticles, 60000); // Fetch and analyze every minute
   </script>
 </body>
 </html>
